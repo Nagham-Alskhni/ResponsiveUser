@@ -20,6 +20,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  List<TextEditingController> commentTextFields = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                         final data = doc.data();
                         return Posts(
                             documentId: doc.reference.id,
-                            userName: data['userName'],
+                            userName: data['userName'] ?? 'test',
                             like: data['like'] ??
                                 false, //if like is null, make it false by default
                             image: data['image'],
@@ -69,8 +71,18 @@ class _HomePageState extends State<HomePage> {
                         physics: AlwaysScrollableScrollPhysics(),
                         itemCount: posts.length,
                         itemBuilder: (context, index) {
-                          String commentText;
+                          //String commentText;
 
+                          //listvirebuilder can be alled multiple times eacht time the screen is refreshed
+                          //the  .add line will cause creation of controllers more than we need
+                          //commentTextFields.add(TextEditingController());
+
+                          //instead we can check if there is a controller and if not we can create one
+                          if (commentTextFields.length < index + 1)
+                            commentTextFields.add(TextEditingController());
+
+                          print(
+                              'commentTextFieldsCount: ${commentTextFields.length}');
                           return Container(
                             child: Column(
                               children: <Widget>[
@@ -148,8 +160,9 @@ class _HomePageState extends State<HomePage> {
                                                 padding:
                                                     const EdgeInsets.all(8.0),
                                                 child: Text(posts[index]
-                                                    .userComment[i]
-                                                    .body),
+                                                        .userComment[i]
+                                                        .body ??
+                                                    'nocomment'),
                                               )
                                             ],
                                           ),
@@ -168,32 +181,53 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       Expanded(
                                         child: TextField(
-                                          onChanged: (value) =>
-                                              commentText = value,
+                                          controller: commentTextFields[index],
+                                          //why is his commented?
+//                                          onChanged:(value){
+//                                            commentText = value;
+//                                            };
                                           decoration: InputDecoration(
                                               hintText: 'write a comment',
                                               suffixIcon: IconButton(
                                                 icon: Icon(Icons.send),
                                                 onPressed: () {
-                                                  print('send');
+                                                  print(
+                                                      'saving comment: ${commentTextFields[index].text}');
 
-                                                  FirebaseFirestore.instance
-                                                      .collection('posts')
-                                                      .doc(posts[index]
-                                                          .documentId)
-                                                      .update({
-                                                    'comments':
-                                                        FieldValue.arrayUnion([
-                                                      {
-                                                        'userName': 'Test User',
-                                                        'body': commentText,
-                                                        'timestamp':
-                                                            DateTime.now()
-                                                      }
-                                                    ])
-                                                  });
+                                                  if (commentTextFields[index]
+                                                          .text !=
+                                                      null) {
+                                                    FirebaseFirestore.instance
+                                                        .collection('posts')
+                                                        .doc(posts[index]
+                                                            .documentId)
+                                                        .update({
+                                                      'comments': FieldValue
+                                                          .arrayUnion([
+                                                        {
+                                                          'userName':
+                                                              'Test User',
+                                                          'body':
+                                                              commentTextFields[
+                                                                      index]
+                                                                  .text,
+                                                          'timestamp':
+                                                              DateTime.now()
+                                                        }
+                                                      ])
+                                                    });
+
+                                                    commentTextFields[index]
+                                                            .text =
+                                                        ''; //empty text field
+
+                                                  }
                                                 },
                                               )),
+//                                          onChanged: (value) {
+//                                            commentText = value;
+//                                            print(commentText);
+//                                          },
                                         ),
                                       ),
                                       SizedBox(
