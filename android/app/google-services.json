@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "298140461453",
+    "firebase_url": "https://responsive-user.firebaseio.com",
+    "project_id": "responsive-user",
+    "storage_bucket": "responsive-user.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298140461453:android:9d1e6c729edb3834af75c4",
+        "android_client_info": {
+          "package_name": "com.nagham.responsive_user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298140461453-oqpi0oc3aj3u4ktud5nsargc9humbv5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRDfJlfzHbiK2PVAce8Gb40PRg-j7eg58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298140461453-oqpi0oc3aj3u4ktud5nsargc9humbv5j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
